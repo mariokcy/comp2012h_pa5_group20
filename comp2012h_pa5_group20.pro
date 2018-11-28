@@ -29,13 +29,15 @@ SOURCES += \
         mainwindow.cpp \
     search_algorithm.cpp \
     gamewindow.cpp \
-    gamecontrol.cpp
+    gamecontrol.cpp \
+    block.cpp
 
 HEADERS += \
         mainwindow.h \
     search_algorithm.h \
     gamewindow.h \
-    gamecontrol.h
+    gamecontrol.h \
+    block.h
 
 FORMS += \
         mainwindow.ui \
@@ -45,3 +47,8 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES +=
+
+RESOURCES += \
+    resources.qrc
