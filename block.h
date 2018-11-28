@@ -7,7 +7,7 @@
 
 using std::string;
 
-class gameControl;
+class GameControl;
 
 class Block : public QPushButton
 {
@@ -15,19 +15,19 @@ class Block : public QPushButton
 
 public:
     Block(QWidget* _parent = nullptr,
-          gameControl* _game = nullptr,
+          GameControl* _game = nullptr,
           int _y = 0,
           int _x = 0,
           int _type = 0,
           int _orientation = 0);
 private:
-    gameControl* game;
+    GameControl* game;
     int x;
     int y;
     int orientation;
     int type;
 
-    static const int BLOCK_SIZE = 20; // Size of block is 20px
+    static const int BLOCK_SIZE = 50; // Size of block is 20px
 
     // Method
     void set_image();

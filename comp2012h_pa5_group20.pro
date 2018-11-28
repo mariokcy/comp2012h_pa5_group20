@@ -28,16 +28,17 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     search_algorithm.cpp \
-    gamewindow.cpp \
     gamecontrol.cpp \
-    block.cpp
+    block.cpp \
+    player_move.cpp \
+    gamewindow.cpp
 
 HEADERS += \
         mainwindow.h \
     search_algorithm.h \
-    gamewindow.h \
     gamecontrol.h \
-    block.h
+    block.h \
+    gamewindow.h
 
 FORMS += \
         mainwindow.ui \

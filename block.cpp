@@ -8,7 +8,7 @@
 using std::string;
 
 Block::Block(QWidget *_parent,
-             gameControl *_game,
+             GameControl *_game,
              int _y,
              int _x,
              int _type,
