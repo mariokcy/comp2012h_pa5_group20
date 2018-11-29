@@ -23,18 +23,21 @@ class GameWindow : public QWidget
 
 public:
     explicit GameWindow(GameControl* _game, QWidget *parent = nullptr);
-    void paint_map();
+    void load_map();
+    void update_map();
     ~GameWindow();
 
 private:
     Ui::GameWindow *ui;
-    static const int BLOCK_SIZE = 50; // 20px*20px
-    virtual void keyPressEvent(QKeyEvent *event) override;
     GameControl* game;
-    std::vector<std::vector<int>> map = {{1,0,0,1},{1,0,0,1},{1,0,0,1},{1,1,1,1}};
-    std::vector<Block*> map_block ={};
+    static const int BLOCK_SIZE = 50; // 20px*20px
+
+    virtual void keyPressEvent(QKeyEvent *event) override;
+    void paint_player();
+    void rotate(int dir);
 signals:
     void KeyPress(int key);
+
 };
 
 #endif // GAMEWINDOW_H

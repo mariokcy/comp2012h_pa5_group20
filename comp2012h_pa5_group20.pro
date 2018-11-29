@@ -30,15 +30,24 @@ SOURCES += \
     search_algorithm.cpp \
     gamecontrol.cpp \
     block.cpp \
-    player_move.cpp \
-    gamewindow.cpp
+    gamewindow.cpp \
+    wall.cpp \
+    accel.cpp \
+    terminate.cpp \
+    player.cpp \
+    road.cpp
 
 HEADERS += \
         mainwindow.h \
     search_algorithm.h \
     gamecontrol.h \
     block.h \
-    gamewindow.h
+    gamewindow.h \
+    wall.h \
+    accel.h \
+    terminate.h \
+    player.h \
+    road.h
 
 FORMS += \
         mainwindow.ui \

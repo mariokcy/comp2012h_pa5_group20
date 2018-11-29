@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     GameControl* game = new GameControl();
-    this->hide();
+    //this->hide();
 }
 
 MainWindow::~MainWindow()
