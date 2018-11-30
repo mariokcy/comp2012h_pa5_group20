@@ -22,18 +22,24 @@ Block::Block(int r,
     setVisible(true);
 }
 
-void Block::set_image() {
-    string str = "";
-    str.push_back(getType());
-    setStyleSheet(QString::fromStdString("border-image: url(\":/resources/map_v2_" + str + ".png\");"));
+void Block::set_image(Player player) {
+    if(player_isHere(player)){
+        setStyleSheet(QString::fromStdString("border-image: url(\":/resources/player.png\");"));
+    }
+    else {
+        string str = "";
+        str.push_back(getType());
+        setStyleSheet(QString::fromStdString("border-image: url(\":/resources/map_v2_" + str + ".png\");"));
+    }
+
+
 }
 
 int Block::getRow() const {
     return row;
 }
 
-void Block::player_here(bool isHere) {
-    if (isHere) {
-        setStyleSheet(QString::fromStdString("border-image: url(\":/resources/player.png\");"));
-    }
+bool Block::player_isHere(Player player) {
+    return player.getRow()==row && player.getCol() == col;
+
 }

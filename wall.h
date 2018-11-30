@@ -12,7 +12,7 @@ private:
 public:
     Wall(int r, int c, QWidget* _parent = nullptr);
     virtual char getType() const override;
-    virtual void set_image() override;
+
 };
 
 #endif // WALL_H

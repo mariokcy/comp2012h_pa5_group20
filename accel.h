@@ -10,7 +10,8 @@ public:
     enum DIRECTION{ UP, DOWN, LEFT, RIGHT };
     Accel(int r, int c, DIRECTION dir, QWidget* _parent);
     virtual char getType() const override;
-    virtual void set_image() override;
+    virtual void set_image(Player player) override;
+
     Accel::DIRECTION getDir() const;
 
 private:

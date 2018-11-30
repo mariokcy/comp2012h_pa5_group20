@@ -15,8 +15,13 @@ Accel::DIRECTION Accel::getDir() const {
     return dir;
 }
 
-void Accel::set_image() {
-    string str = "";
-    str.push_back(getType());
-    setStyleSheet(QString::fromStdString("border-image: url(\":/resources/map_v2_" + str + ".png\");"));
+void Accel::set_image(Player player) {
+    if(player_isHere(player)){
+        setStyleSheet(QString::fromStdString("border-image: url(\":/resources/player.png\");"));
+    }
+    else {
+        string str = "";
+        str.push_back(getType());
+        setStyleSheet(QString::fromStdString("border-image: url(\":/resources/map_v2_" + str + ".png\");"));
+    }
 }
