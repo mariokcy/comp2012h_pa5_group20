@@ -5,32 +5,30 @@
 #include <QPushButton>
 #include <QDebug>
 
+
 using std::string;
 
-class gameControl;
-
+class GameControl;
+// Normal road block, allow passage, no special feature
 class Block : public QPushButton
 {
     Q_OBJECT
 
 public:
-    Block(QWidget* _parent = nullptr,
-          gameControl* _game = nullptr,
-          int _y = 0,
-          int _x = 0,
-          int _type = 0,
-          int _orientation = 0);
+    Block(int r, int c, QWidget* _parent = nullptr);
+    int getRow() const;
+    int getCol() const;
+    void setRow(int r);
+    void setCol(int c);
+    virtual char getType() const =0; // virtual function
+    virtual void set_image(Player player);
+    bool player_isHere(Player player);
+
 private:
-    gameControl* game;
-    int x;
-    int y;
-    int orientation;
-    int type;
+    int row ;
+    int col;
 
-    static const int BLOCK_SIZE = 20; // Size of block is 20px
-
-    // Method
-    void set_image();
+    static const int BLOCK_SIZE = 50; // Size of block is 20px
 };
 
 #endif // BLOCK_H

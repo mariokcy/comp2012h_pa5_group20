@@ -1,9 +1,9 @@
 #ifndef GAMEWINDOW_H
 #define GAMEWINDOW_H
 
-#include <QMainWindow>
-#include <string>
-#include "block.h"
+#include <QWidget>
+#include "gamecontrol.h"
+#include <vector>
 /*
  * Assumption :
  * The map is composed by a 15*15 block, information from the map is stored in a vector vector
@@ -13,29 +13,31 @@
  *
  * */
 
-//Control Game Window Display
 namespace Ui {
 class GameWindow;
 }
 
-class GameWindow : public QMainWindow
+class GameWindow : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit GameWindow(QWidget *parent = nullptr);
-    void rotate();
-
+    explicit GameWindow(GameControl* _game, QWidget *parent = nullptr);
+    void load_map();
+    void update_map();
     ~GameWindow();
 
 private:
     Ui::GameWindow *ui;
-    static const int BLOCK_SIZE = 20; // 20px*20px
+    GameControl* game;
+    static const int BLOCK_SIZE = 50; // 20px*20px
 
+    virtual void keyPressEvent(QKeyEvent *event) override;
+    void paint_player();
+    void rotate(int dir);
+signals:
+    void KeyPress(int key);
 
-    void paint_map();
-    std::vector<std::vector<int>> map = {{0,1,0,1},{0,1,1,0},{1,1,1,1},{0,0,0,0}};
-    std::vector<std::vector<Block*>> map_block ={{}};
 };
 
 #endif // GAMEWINDOW_H
