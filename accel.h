@@ -11,6 +11,7 @@ public:
     Accel(int r, int c, DIRECTION dir, QWidget* _parent);
     virtual char getType() const override;
     virtual void set_image(Player player) override;
+
     Accel::DIRECTION getDir() const;
 
 private:

@@ -9,3 +9,4 @@ Terminate::Terminate(int r, int c, QWidget* _parent) :
 char Terminate::getType() const {
     return IMAGE_TYPE.front();
 }
+

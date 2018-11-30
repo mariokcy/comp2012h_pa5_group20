@@ -1,15 +1,14 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "gamewindow.h"
+#include "gamecontrol.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    GameWindow* game = new GameWindow();
-    game->show();
-    this->hide();
+    GameControl* game = new GameControl();
+    //this->hide();
 }
 
 MainWindow::~MainWindow()

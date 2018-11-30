@@ -21,6 +21,7 @@ public:
     void setRow(int r);
     void setCol(int c);
     virtual char getType() const =0; // virtual function
+
     virtual void set_image(Player player);
     bool player_isHere(Player player);
 

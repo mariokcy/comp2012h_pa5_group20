@@ -31,8 +31,8 @@ void GameWindow::keyPressEvent(QKeyEvent *event) {
 
 void GameWindow::load_map() {
     qDebug() << "hi";
-
     qDebug()<<"player:"<< game->player->getRow() <<','<< game->player->getCol() <<endl;
+
     for (std::vector<std::vector<int>>::iterator row = game->map.begin(); row != game->map.end(); ++row) {
         qDebug()<<"loop";
         std::vector<int> col_list = *row;
@@ -40,6 +40,7 @@ void GameWindow::load_map() {
         for (std::vector<int>::iterator block = col_list.begin(); block != col_list.end(); ++block) {
             Block* tile;
             qDebug()<<row-game->map.begin()<<','<<block-col_list.begin()<<endl;
+
             switch (*block) {
             case GameControl::R : // Normal road
                 tile = new Road(row-game->map.begin(), block-col_list.begin(), this);
@@ -66,10 +67,9 @@ void GameWindow::load_map() {
                 break;
             }
             qDebug() << *block;
+
             tile->set_image(*(game->player));
             _board.push_back(tile);
-
-
         }
         qDebug() << '\n';
         game->board.push_back(_board);
@@ -88,5 +88,4 @@ void GameWindow::rotate(int dir) {
 
 void GameWindow::update_map(){
     load_map();
-
 }

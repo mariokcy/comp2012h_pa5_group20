@@ -28,16 +28,26 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     search_algorithm.cpp \
-    gamewindow.cpp \
     gamecontrol.cpp \
-    block.cpp
+    block.cpp \
+    gamewindow.cpp \
+    wall.cpp \
+    accel.cpp \
+    terminate.cpp \
+    player.cpp \
+    road.cpp
 
 HEADERS += \
         mainwindow.h \
     search_algorithm.h \
-    gamewindow.h \
     gamecontrol.h \
-    block.h
+    block.h \
+    gamewindow.h \
+    wall.h \
+    accel.h \
+    terminate.h \
+    player.h \
+    road.h
 
 FORMS += \
         mainwindow.ui \
