@@ -5,6 +5,17 @@
 #include<vector>
 #include<queue>
 #include<deque>
+#include <iostream>
+#include <queue>
+#include <climits>
+#include <cstring>
+#include<list>
+#include<stack>
+// M x N matrix
+#define M 10
+#define N 10
+
+
 using namespace std;
 //wall road terminate up down left right
 enum{W,R,T,A,B,C,D};
@@ -17,8 +28,8 @@ int udlr[4][2] = { { -1,0 }, { 1,0 }, { 0,-1 }, { 0,1 } };
 {R,D,R,R},
 {R,R,W,R},
 {D,R,R,R}
-};
-*/
+};*/
+
 
 int map[20][20] = {
 {W,R,R,R,W,R,R,R,R,R,R,T,R,R,R,R,R,R,R,C},
@@ -115,202 +126,144 @@ void printMap(Block* (*board)[MAX_ROW][MAX_COL], Player player) {
 	}
 	cout << "--------------------------" << endl;
 }
-bool findPath(int curRow, int curCol, int endRow, int endCol, deque<vector<int>> &sol, Block* (*board)[MAX_ROW][MAX_COL]) {
-	/*	//out of bound
-		if (curRow > MAX_ROW - 1 || curRow<0 || curCol>MAX_COL - 1 || curCol < 0)return sol;
-		//end
-		if (curRow==endR&&curCol==endC)return sol;
-
-		deque<vector<int>> a1,a2,a3,a4;
-
-		a1.assign(sol.begin(), sol.end());
-		a2.assign(sol.begin(), sol.end());
-		a3.assign(sol.begin(), sol.end());
-		a4.assign(sol.begin(), sol.end());
-		for (int i = 0; i < 4; i++) {
-
-			DIRECTION dir = i == 0 ? UP :
-				i == 1 ? DOWN :
-				i == 2 ? LEFT : RIGHT;
-			Player temp{ curRow,curCol,dir };
-
-			do {
-
-				if (temp.isAccel()) {
-					dir = temp.getDir();
-
-				}
-
-				int r = temp.getRow(); int c = temp.getCol();
-				switch (dir)
-				{
-
-				case UP:
-					if (r > 0 && map[r - 1][c] != W) {
-						temp.setRow(r - 1);
-						temp.setDir(UP);
-					}
-					else
-						temp.setAccel(false);
-
-					break;
-
-				case DOWN:
-					if (r < MAX_ROW - 1 && map[r + 1][c] != W) {
-						temp.setRow(r + 1);
-						temp.setDir(DOWN);
-					}
-					else
-						temp.setAccel(false);
-
-					break;
-				case LEFT:
-					if (c > 0 && map[r][c - 1] != W) {
-						temp.setCol(c - 1);
-						temp.setDir(LEFT);
-					}
-					else
-						temp.setAccel(false);
-
-					break;
-
-				case RIGHT:
-					if (c < MAX_COL - 1 && map[r][c + 1] != W) {
-						temp.setCol(c + 1);
-						temp.setDir(DIRECTION::RIGHT);
-					}
-					else
-						temp.setAccel(false);
-
-					break;
-				}
 
 
+// queue node used in BFS
+struct Node
+{
+	// (x, y) represents matrix cell coordinates
+	// dist represent its minimum distance from the source
+	int x, y, dist;
+};
 
+// Below arrays details all 4 possible movements from a cell
+int row[] = { -1, 1, 0, 0 };
+int col[] = { 0, 0, -1, 1 };
 
+// Function to check if it is possible to go to position (row, col)
+// from current position. The function returns false if (row, col)
+// is not a valid position or has value 0 or it is already visited
+bool isValid(Block* (*board)[MAX_ROW][MAX_COL], bool visited[][MAX_COL], int row, int col)
+{
+	return (row >= 0) && (row < MAX_ROW) && (col >= 0) && (col < MAX_COL)
+		&& !((*board)[row][col]->getType()=='W') && !visited[row][col];
+}
 
-				//update dir and accel
-				if ((*board)[temp.getRow()][temp.getCol()]->getType() == 'A') {
-					Accel* tempAccel = dynamic_cast<Accel*> ((*board)[temp.getRow()][temp.getCol()]);
-					temp.setDir(tempAccel->getDir());
-					temp.setAccel(true);
-				}
-				else if ((*board)[temp.getRow()][temp.getCol()]->getType() == 'T') {
-					temp.setAccel(false);
-				}
+vector<int> checkEndPoint(Block* (*board)[MAX_ROW][MAX_COL], int curRow, int curCol, DIRECTION dir) {
+	
+	Player temp{ curRow,curCol,dir };
+	do {
 
-				//set Accel false if have wall
-				r = temp.getRow(); c = temp.getCol();
-				switch (temp.getDir())
-				{
+		if (temp.isAccel()) {
+			dir = temp.getDir();
 
-				case UP:
-					if (r <= 0 || map[r - 1][c] == W) {
-						temp.setAccel(false);
-					}
-					break;
+		}
 
-				case DOWN:
-					if (r >= MAX_ROW - 1 || map[r + 1][c] == W) {
-						temp.setAccel(false);
-					}
-					break;
-				case LEFT:
-					if (c <= 0 || map[r][c - 1] == W) {
-						temp.setAccel(false);
-					}
-					break;
+		int r = temp.getRow(); int c = temp.getCol();
+		switch (dir)
+		{
 
-				case RIGHT:
-					if (c >= MAX_COL - 1 || map[r][c + 1] == W) {
-						temp.setAccel(false);
-					}
-					break;
-				}
-
-				//end when player need input
-			} while (temp.isAccel());
-
-
-			deque<vector<int>>::iterator b = sol.begin();
-			bool find = false;
-			for (; b != sol.end(); b++) {
-				if ((*b)[0] == temp.getRow() && (*b)[1] == temp.getCol()) {
-					cout << (*b)[0] << ',' << (*b)[1] << endl;
-					find = true;
-					break;
-				}
+		case UP:
+			if (r > 0 && map[r - 1][c] != W) {
+				temp.setRow(r - 1);
+				temp.setDir(UP);
 			}
-			if (!find && !(curRow == temp.getRow() && curCol == temp.getCol())) {
-				vector<int> new_coor;
-				new_coor.push_back(temp.getRow());
-				new_coor.push_back(temp.getCol());
-				i == 0 ? a1.push_back(new_coor) :
-					i == 1 ? a2.push_back(new_coor) :
-					i == 2 ? a3.push_back(new_coor) :
-					a4.push_back(new_coor);
+			else
+				temp.setAccel(false);
+
+			break;
+
+		case DOWN:
+			if (r < MAX_ROW - 1 && map[r + 1][c] != W) {
+				temp.setRow(r + 1);
+				temp.setDir(DOWN);
 			}
+			else
+				temp.setAccel(false);
 
-
-
-		}
-		bool result[4] = { false, false, false, false };
-		deque<vector<int>> possibleSolution[4];
-		if (a1.size() == sol.size() + 1) {
-			possibleSolution[0] = findPath(curRow - 1, curCol, endR, endC, a1, board);
-			result[0] = true;
-		}
-		if (a2.size() == sol.size() + 1) {
-			possibleSolution[1] = findPath(curRow +1, curCol, endR, endC, a2, board);
-			result[1] = true;
-		}
-		if (a3.size() == sol.size() + 1) {
-			possibleSolution[2] = findPath(curRow, curCol-1, endR, endC, a3, board);
-			result[2]=true;
-		}
-		if (a4.size() == sol.size() + 1) {
-			possibleSolution[3]= findPath(curRow , curCol+1, endR, endC, a4, board);
-			result[3] = true;
-		}
-		int min=-1;
-		if (!(result[0] || result[1] || result[2] || result[3])) return sol;
-		for (int i = 0; i < 4; i++) {
-			if (result[i] == false) continue;
-			if (result[i] == true) {
-				if (min == -1) {
-					min = i;
-				}
-				else if(possibleSolution[min].size() > possibleSolution[i].size()){
-					min = i;
-				}
+			break;
+		case LEFT:
+			if (c > 0 && map[r][c - 1] != W) {
+				temp.setCol(c - 1);
+				temp.setDir(LEFT);
 			}
+			else
+				temp.setAccel(false);
+
+			break;
+
+		case RIGHT:
+			if (c < MAX_COL - 1 && map[r][c + 1] != W) {
+				temp.setCol(c + 1);
+				temp.setDir(DIRECTION::RIGHT);
+			}
+			else
+				temp.setAccel(false);
+
+			break;
 		}
-		return possibleSolution[min];
-		*/
 
-		//check end
-	if (curRow == endRow && curCol == endCol) {
 
-		return true;
-	}
-	vector<int> move[4];
-	//update next move
-	for (int i = 0; i < 4; i++) {
 
-		DIRECTION dir = i == 0 ? UP :
-			i == 1 ? DOWN :
-			i == 2 ? LEFT : RIGHT;
-		Player temp{ curRow,curCol,dir };
 
+
+		//update dir and accel
+		if ((*board)[temp.getRow()][temp.getCol()]->getType() == 'A') {
+			Accel* tempAccel = dynamic_cast<Accel*> ((*board)[temp.getRow()][temp.getCol()]);
+			temp.setDir(tempAccel->getDir());
+			temp.setAccel(true);
+		}
+		else if ((*board)[temp.getRow()][temp.getCol()]->getType() == 'T') {
+			temp.setAccel(false);
+		}
+
+		//set Accel false if have wall
+		r = temp.getRow(); c = temp.getCol();
+		switch (temp.getDir())
+		{
+
+		case UP:
+			if (r <= 0 || map[r - 1][c] == W) {
+				temp.setAccel(false);
+			}
+			break;
+
+		case DOWN:
+			if (r >= MAX_ROW - 1 || map[r + 1][c] == W) {
+				temp.setAccel(false);
+			}
+			break;
+		case LEFT:
+			if (c <= 0 || map[r][c - 1] == W) {
+				temp.setAccel(false);
+			}
+			break;
+
+		case RIGHT:
+			if (c >= MAX_COL - 1 || map[r][c + 1] == W) {
+				temp.setAccel(false);
+			}
+			break;
+		}
+
+		//end when player need input 
+	} while (temp.isAccel());
+
+	vector<int> end;
+	end.push_back(temp.getRow());
+	end.push_back(temp.getCol());
+	return end;
+};
+vector<int> checkEndPoint(Block* (*board)[MAX_ROW][MAX_COL], int curRow, int curCol) {
+	if ((*board)[curRow][curCol]->getType() == 'A') {
+		Accel* tempAccel = dynamic_cast<Accel*> ((*board)[curRow][curCol]);
+		Player temp{ curRow,curCol,tempAccel->getDir() };
+		temp.setAccel(true);
+	
 		do {
 
-			if (temp.isAccel()) {
-				dir = temp.getDir();
-
-			}
-
 			int r = temp.getRow(); int c = temp.getCol();
-			switch (dir)
+			switch (temp.getDir())
 			{
 
 			case UP:
@@ -353,9 +306,7 @@ bool findPath(int curRow, int curCol, int endRow, int endCol, deque<vector<int>>
 				break;
 			}
 
-
-
-
+					   
 
 			//update dir and accel
 			if ((*board)[temp.getRow()][temp.getCol()]->getType() == 'A') {
@@ -398,37 +349,138 @@ bool findPath(int curRow, int curCol, int endRow, int endCol, deque<vector<int>>
 
 			//end when player need input 
 		} while (temp.isAccel());
-		move[i].push_back(temp.getRow());
-		move[i].push_back(temp.getCol());
+	
+		vector<int> end;
+		end.push_back(temp.getRow());
+		end.push_back(temp.getCol());
+		return end;
 	}
-	
-	//check repeat
-	for (int i = 0; i < 4; i++) {
-		bool find = false;
-		for (deque<vector<int>>::iterator b = sol.begin(); b != sol.end(); b++) {
-	
-			if ((*b)[0] == move[i][0] && (*b)[1] == move[i][1]) {
-			
-				find = true;
-				break;
+	else
+	{
+		vector<int> end;
+		end.push_back(curRow);
+		end.push_back(curCol);
+		return end;
+	}
+}
+
+
+//choice{originalRow, originalCol, movedRow, movedCol, terminateRow, terminateCol, distanceFromStart}
+//stp: store moved coordinate
+bool findStp(vector<vector<int>> choice,int n, int endRow, int endCol ,stack<vector<int>> &stp, Block* (*board)[MAX_ROW][MAX_COL]) {
+	if (n == 0) {
+		return true;
+	}
+	for (int i = choice.size() - 1; i >= 0; i--) {
+		vector<int> end = checkEndPoint(board, choice[i][2], choice[i][3]);
+		if (end[0]== endRow && end[1] == endCol) {
+			stp.push(choice[i]);
+			if (findStp(choice, n - 1, choice[i][0], choice[i][1], stp, board) ){
+				return true;
+			}
+			else {
+				stp.pop();
 			}
 		}
-
-		if (!find) {
-			vector<int> new_coor;
-			sol.push_back(move[i]);
-		if (findPath(move[i][0], move[i][1], endRow, endCol, sol, board)) {
-			return true;
+		if (choice[i][6] == n - 1) {
+			return false;
 		}
-		else
-		{
-			sol.pop_back();
-		}
-		}
-		
 	}
 	return false;
 }
+	
+
+
+
+
+// Find Shortest Possible Route in a matrix mat from source
+// cell (i, j) to destination cell (x, y)
+void BFS(Block* (*board)[MAX_ROW][MAX_COL], int i, int j, int x, int y)
+{
+	//store the possible route for find stp
+	vector<vector<int>> choice;
+	choice.push_back(vector<int>{ i, j, i, j, i, j, 0 });
+
+
+	// construct a matrix to keep track of visited cells
+	bool visited[MAX_ROW][MAX_COL];
+
+	// initially all cells are unvisited
+	memset(visited, false, sizeof visited);
+
+	// create an empty queue
+	queue<Node> q;
+
+	// mark source cell as visited and enqueue the source node
+	visited[i][j] = true;
+	q.push({ i, j, 0 });
+
+
+	
+	
+	// stores length of longest path from source to destination
+	int min_dist = INT_MAX;
+
+	// run till queue is not empty	
+	while (!q.empty())
+	{
+		// pop front node from queue and process it
+		Node node = q.front();
+		q.pop();
+		// (i, j) represents current cell and dist stores its
+		// minimum distance from the source
+		int i = node.x, j = node.y, dist = node.dist;
+		//a.push_back(vector<int>{i, j });
+
+				// if destination is found, update min_dist and stop
+		if (i == x && j == y)
+		{
+			min_dist = dist;
+			break;
+		}
+
+		// check for all 4 possible movements from current cell
+		// and enqueue each valid movement
+		for (int k = 0; k < 4; k++)
+		{
+			// check if it is possible to go to position
+			// (i + row[k], j + col[k]) from current position
+
+			vector<int> endPoint = checkEndPoint(board, i, j, (DIRECTION)k);
+			if (isValid(board, visited, i + row[k], j + col[k]) && isValid(board, visited, endPoint[0], endPoint[1]))
+			{
+				// mark next cell as visited and enqueue it
+				visited[i + row[k]][j + col[k]] = true;
+				visited[endPoint[0]][endPoint[1]] = true;
+				q.push({ endPoint[0], endPoint[1], dist + 1 });
+
+				choice.push_back(vector<int>{ i, j, i + row[k], j + col[k], endPoint[0], endPoint[1], dist + 1 });
+			}
+		}
+	}
+
+		if (min_dist != INT_MAX)
+			cout << "The shortest path from source to destination "
+			"has length " << min_dist << endl;
+		else
+			cout << "Destination can't be reached from given source" << endl;
+
+
+
+	stack<vector<int>> stp;
+	findStp(choice, min_dist, x, y, stp, board);
+	for (int i = 0; i < min_dist; i++) {
+
+		cout << stp.top()[2] << ',' << stp.top()[3] << endl;
+		stp.pop();
+	}
+
+}
+
+
+
+
+
 int main()
 {
 	Player* player = new Player(19,19,DOWN);
@@ -437,19 +489,17 @@ int main()
 	loadMap(&board);
 
 	printMap(&board, *player);
-	//store shortest path;
-	deque<vector<int>> stp;
+
 	do {
 		char input;
 		DIRECTION dir;
 		if (!player->isAccel()) {
+	
 			cout << "enter dir (w: up/ s: down/ a: left/ d: right): " << endl;
 			cin >> input;
-			if (input == 'r') {
-				vector<int>coor{ player->getRow(), player->getCol() };
-				stp.push_back(coor);
-				bool sol=findPath(player->getRow(), player->getCol(), 1, 1, stp, &board);
-				break;
+			if (input == 'f') {
+			BFS(&board, player->getRow(), player->getCol(), 1, 1);
+			continue;
 			}
 			else {
 				dir = input == 'w' ? UP :
@@ -552,14 +602,8 @@ int main()
 
 
 		printMap(&board, *player);
-	} while (!player->isEnd());
+	} while (!(player->isEnd()));
 
-	for (int i = 0; i < stp.size() - 1; i++) {
-		player->setRow(stp[i][0]);
-		player->setCol(stp[i][1]);
-		printMap(&board, *player);
-
-
-	}
+	
 
 }
