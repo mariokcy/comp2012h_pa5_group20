@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "gamecontrol.h"
 #include <vector>
+#include <QPainter>
 /*
  * Assumption :
  * The map is composed by a 15*15 block, information from the map is stored in a vector vector
@@ -26,15 +27,17 @@ public:
     void load_map();
     void update_map();
     ~GameWindow();
+    void rotate(int dir);
 
 private:
     Ui::GameWindow *ui;
     GameControl* game;
+    QPainter* paint;
     static const int BLOCK_SIZE = 50; // 20px*20px
 
     virtual void keyPressEvent(QKeyEvent *event) override;
     void paint_player();
-    void rotate(int dir);
+
 signals:
     void KeyPress(int key);
 

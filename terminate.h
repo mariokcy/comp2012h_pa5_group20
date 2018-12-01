@@ -12,7 +12,7 @@ private:
 public:
     Terminate(int r, int c, QWidget* _parent = nullptr);
     virtual char getType() const override;
-
+    virtual void set_image() override;
 };
 
 #endif // TERMINATE_H

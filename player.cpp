@@ -1,6 +1,7 @@
 #include "player.h"
 
-Player::Player(int r, int c, Accel::DIRECTION dir) {
+Player::Player(int r, int c, Accel::DIRECTION dir)
+{
     this->dir = dir;
     row = r;
     col = c;

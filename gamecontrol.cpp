@@ -28,6 +28,9 @@ void GameControl::move(int key) {
                 dir = static_cast<Accel::DIRECTION>(i-key_list.begin());
             }
         }
+        if (key == Qt::Key_R) {
+            game_window->rotate(0);
+        }
 
     }
     // Walk to the desire position

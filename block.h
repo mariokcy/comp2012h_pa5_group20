@@ -5,7 +5,6 @@
 #include <QPushButton>
 #include <QDebug>
 
-
 using std::string;
 
 class GameControl;
@@ -21,15 +20,13 @@ public:
     void setRow(int r);
     void setCol(int c);
     virtual char getType() const =0; // virtual function
-
-    virtual void set_image(Player player);
-    bool player_isHere(Player player);
+    virtual void set_image();
+    static const int BLOCK_SIZE = 50; // Size of block is 20px
 
 private:
     int row ;
     int col;
 
-    static const int BLOCK_SIZE = 50; // Size of block is 20px
 };
 
 #endif // BLOCK_H

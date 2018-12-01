@@ -12,7 +12,7 @@ private:
 public:
     Road(int r, int c, QWidget* _parent);
     virtual char getType() const override;
-
+    virtual void set_image() override;
 };
 
 #endif // ROAD_H
