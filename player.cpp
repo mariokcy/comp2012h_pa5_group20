@@ -1,7 +1,6 @@
 #include "player.h"
 
-Player::Player(int r, int c, Accel::DIRECTION dir)
-{
+Player::Player(int r, int c, DIRECTION dir) {
     this->dir = dir;
     row = r;
     col = c;
@@ -15,14 +14,14 @@ int Player::getRow()const {
 int Player::getCol()const {
     return col;
 }
-Accel::DIRECTION Player::getDir()const {
+DIRECTION Player::getDir()const {
     return dir;
 }
 bool Player::isAccel() {
     return Accel;
 }
 //setter
-void Player::setDir(Accel::DIRECTION input) {
+void Player::setDir(DIRECTION input) {
     this->dir = input;
 }
 void Player::setAccel(bool on) {

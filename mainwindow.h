@@ -17,6 +17,10 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+public slots:
+    void game_started();
+    void game_closed();
 };
 
 #endif // MAINWINDOW_H

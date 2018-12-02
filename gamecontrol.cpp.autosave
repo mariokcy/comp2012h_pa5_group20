@@ -32,7 +32,7 @@ GameControl::~GameControl() {
 }
 
 void GameControl::move(int key) {
-
+    
     DIRECTION dir = UP; // Default : UP
     if (player->isAccel()) {
         dir = player->getDir();

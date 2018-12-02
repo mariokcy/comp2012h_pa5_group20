@@ -1,4 +1,4 @@
-#include "accel.h"
+#include "direction.h"
 
 class Player {
 
@@ -7,18 +7,18 @@ private:
     int col = 0;
 
     bool Accel = false;
-    Accel::DIRECTION dir = Accel::DOWN;
+    DIRECTION dir = DOWN;
 
 public:
     Player() = default;
-    Player(int r, int c, Accel::DIRECTION dir = Accel::DOWN);
+    Player(int r, int c, DIRECTION dir = DOWN);
     //getter
     int getRow() const;
     int getCol() const;
-    Accel::DIRECTION getDir() const;
+    DIRECTION getDir() const;
     bool isAccel();
     //setter
-    void setDir(Accel::DIRECTION input);
+    void setDir(DIRECTION input);
     void setAccel(bool on);
     void setRow(int r);
     void setCol(int c);

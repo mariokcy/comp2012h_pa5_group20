@@ -5,6 +5,7 @@
 #include <QString>
 #include <vector>
 #include "block.h"
+#include <stack>
 
 class GameWindow;
 // Control the game Flow
@@ -27,6 +28,7 @@ public:
     std::vector<std::vector<Block*>> board = {};
     Player* player;
     GameWindow* game_window;
+    std::stack<> stack = new std::stack {};
 
 private:
     void rotate();

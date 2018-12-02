@@ -1,0 +1,26 @@
+#ifndef SEARCH_ALGORITHM_H
+#define SEARCH_ALGORITHM_H
+#include "gamecontrol.h"
+
+class Search_algorithm
+{
+public:
+    Search_algorithm();
+
+private :
+    // queue node used in BFS
+    struct Node
+    {
+        // (x, y) represents matrix cell coordinates
+        // dist represent its minimum distance from the source
+        int x, y, dist;
+    };
+
+    // Below arrays details all 4 possible movements from a cell
+    int row[4] = { -1, 1, 0, 0 };
+    int col[4] = { 0, 0, -1, 1 };
+    
+    bool isValid(std::vector<std::vector<Block*>> board, bool visited[][MAX_COL], int row, int col);
+};
+
+#endif // SEARCH_ALGORITHM_H

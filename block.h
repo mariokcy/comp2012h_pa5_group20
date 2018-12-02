@@ -1,9 +1,9 @@
 #ifndef BLOCK_H
 #define BLOCK_H
 
-#include <string>
 #include <QPushButton>
 #include <QDebug>
+#include "player.h"
 
 using std::string;
 
@@ -17,16 +17,18 @@ public:
     Block(int r, int c, QWidget* _parent = nullptr);
     int getRow() const;
     int getCol() const;
-    void setRow(int r);
-    void setCol(int c);
+    virtual void setRow(int r) = 0;
+    virtual void setCol(int c)= 0;
     virtual char getType() const =0; // virtual function
-    virtual void set_image();
-    static const int BLOCK_SIZE = 50; // Size of block is 20px
 
-private:
-    int row ;
+    virtual void set_image(Player player);
+    bool player_isHere(Player player);
+
+protected:
+    int row;
     int col;
 
+    static const int BLOCK_SIZE = 50; // Size of block is 20px
 };
 
 #endif // BLOCK_H
