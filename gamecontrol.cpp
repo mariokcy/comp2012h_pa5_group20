@@ -5,8 +5,10 @@
 #include <QDebug>
 #include "accel.h"
 #include <algorithm>
+#include <QMessageBox>
 #include "record.h"
 #include <QFile>
+#include "search_algorithm.h"
 
 using std::cout;
 using std::cin;
@@ -34,7 +36,7 @@ GameControl::~GameControl() {
 }
 
 void GameControl::move(int key) {
-    
+    if (gameEnd) return;
     DIRECTION dir = UP; // Default : UP
     if (player->isAccel()) {
         dir = player->getDir();
@@ -49,113 +51,21 @@ void GameControl::move(int key) {
             rotate();
             return;
         }
+        if (key==Qt::Key_C) {
 
+        }
     }
     // Walk to the desire position
     std::vector<int> temp = Search_algorithm::checkEndPoint(&board,player->getRow(),player->getCol(),dir);
-    /*
-    switch (dir)
-    {
-    case UP:// map[r-1][c].PASSABLE != false
-        if (r > 0 && board[r - 1][c]->getType() != 'w') {
-            player->setRow(r - 1);
-            player->setDir(UP);
-        }
-        else
-            player->setAccel(false);
-
-        break;
-
-    case DOWN:
-        if (r < MAX_ROW - 1 &&
-                board[r + 1][c]->getType() != 'w') {
-            player->setRow(r + 1);
-            player->setDir(DOWN);
-        }
-        else
-            player->setAccel(false);
-
-        break;
-    case LEFT:
-        if (c > 0 &&
-                board[r][c - 1]->getType() != 'w') {
-            player->setCol(c - 1);
-            player->setDir(LEFT);
-        }
-        else
-            player->setAccel(false);
-        break;
-
-    case RIGHT:
-        if (c < MAX_COL - 1 && board[r][c + 1]->getType() != 'w') {
-            player->setCol(c + 1);
-            player->setDir(RIGHT);
-        }
-        else
-            player->setAccel(false);
-        break;
-    }
-    game_window->update_map();
-    // Update r and c
-    r = player->getRow(); c = player->getCol();
-
-    // Position of the player is changed according to their key pressed
-    //update dir and accel
-    if (board[r][c]->getType() == 'a') {
-        Accel* temp = dynamic_cast<Accel*> (board[r][c]);
-        player->setDir(temp->getDir());
-        player->setAccel(true);
-    } else if (board[r][c]->getType() == 't') {
-        player->setAccel(false);
-    }
-
-    if (player->isAccel()) {
-        // End the accelerating situation if the condition is fulfilled
-        switch (player->getDir())
-        {
-
-        case UP:
-            if (r <= 0 || !(board[r - 1][c]->getType() != 'w')) {
-                player->setAccel(false);
-            } else {
-                move(key);
-            }
-            break;
-
-        case DOWN:
-            if (r >= MAX_ROW - 1 || !(board[r + 1][c]->getType() != 'w')) {
-                player->setAccel(false);
-            } else {
-                move(key);
-            }
-            break;
-        case LEFT:
-            if (c <= 0 || !(board[r][c - 1]->getType() != 'w')) {
-                player->setAccel(false);
-            } else {
-                move(key);
-            }
-            break;
-
-        case RIGHT:
-            if (c >= MAX_COL - 1 || !(board[r][c + 1]->getType() != 'w')) {
-                player->setAccel(false);
-            } else {
-                move(key);
-            }
-            break;
-        }
-
-    }
-    game_window->update_map();
-    qDebug("%d||||||%d",player->getRow(), player->getCol());
-
-}*/
     player->setRow(temp[0]);
     player->setCol(temp[1]);
     game_window->update_map();
     qDebug("%d||||||%d",player->getRow(), player->getCol());
-
+    step++;
+    if(player->getRow()==goal_x && player->getCol()==goal_y) {
+        QMessageBox::information(nullptr, "Congraulations!You arrived the end point.", QString::fromStdString("You have use " + std::to_string(step) + "steps!"));
+        gameEnd = true;
+    }
 }
 
 //update map by rotate 90 degree and also change all related to direction such as accelerater, player
@@ -207,6 +117,10 @@ void GameControl::rotate() {
         player->setDir(UP);
         break;
     }
+    int x = goal_x;
+    goal_x = MAX_COL - goal_y;
+    goal_y = x;
+
     //reload and update the map
     game_window->load_map();
     game_window->update_map();

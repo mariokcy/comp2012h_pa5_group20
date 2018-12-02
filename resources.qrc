@@ -8,6 +8,7 @@
         <file>map_v2_a_1.png</file>
         <file>map_v2_a_2.png</file>
         <file>map_v2_a_3.png</file>
+        <file>map_v2_g.png</file>
     </qresource>
     <qresource prefix="/">
         <file>map.txt</file>

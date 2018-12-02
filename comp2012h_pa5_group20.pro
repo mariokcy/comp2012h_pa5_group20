@@ -36,7 +36,8 @@ SOURCES += \
     terminate.cpp \
     player.cpp \
     road.cpp \
-    record.cpp
+    record.cpp \
+    goal.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -50,7 +51,8 @@ HEADERS += \
     player.h \
     road.h \
     direction.h \
-    record.h
+    record.h \
+    goal.h
 
 FORMS += \
         mainwindow.ui \

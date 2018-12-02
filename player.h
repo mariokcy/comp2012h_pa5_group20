@@ -29,7 +29,4 @@ public:
     void setAccel(bool on);
     void setRow(int r);
     void setCol(int c);
-
-    //check End Game
-    bool isEnd();
 };

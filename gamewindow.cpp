@@ -4,6 +4,7 @@
 #include "wall.h"
 #include "road.h"
 #include "accel.h"
+#include "goal.h"
 #include "terminate.h"
 #include <QDebug>
 
@@ -65,6 +66,9 @@ void GameWindow::load_map() {
             case GameControl::D :
                 tile = new Accel(row-game->map.begin(),block-col_list.begin(), static_cast<DIRECTION>(*block - GameControl::A), this);
                 qDebug() << dynamic_cast<Accel*>(tile)->getDir();
+                break;
+            case GameControl::G :
+                tile = new Goal(row-game->map.begin(), block-col_list.begin(), this);
                 break;
             default:
                 tile = new Road(row-game->map.begin(), block-col_list.begin(), this);

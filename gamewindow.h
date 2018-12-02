@@ -32,10 +32,13 @@ public:
 private:
     Ui::GameWindow *ui;
     GameControl* game;
+
     static const int BLOCK_SIZE = 50; // 20px*20px
+
     void closeEvent(QCloseEvent *event);
     virtual void keyPressEvent(QKeyEvent *event) override;
     void paint_player();
+
 signals:
     void KeyPress(int key);
     void gameWindow_closed();

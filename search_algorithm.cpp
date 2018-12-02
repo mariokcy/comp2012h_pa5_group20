@@ -120,7 +120,7 @@ bool Search_algorithm::isValid(std::vector<std::vector<Block*>> *board, bool vis
     return end;
 };
 
-std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>> *board, int curRow, int curCol)
+std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>> *board, int movedRow, int movedCol)
 {
     if ((*board)[movedRow][movedCol]->getType() == 'a') {
         Accel* tempAccel = dynamic_cast<Accel*> ((*board)[movedRow][movedCol]);

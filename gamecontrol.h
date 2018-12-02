@@ -16,7 +16,7 @@ class GameControl : public QObject
 public:
     GameControl();
     ~GameControl();
-    enum {W, R, T, A, B, C, D}; // W: Wall, R: Road, T: Stop A,B,C,D: wsad Accelerator
+    enum {W, R, T, A, B, C, D, G}; // W: Wall, R: Road, T: Stop A,B,C,D: wsad Accelerator, G: goal
     std::vector<std::vector<int>> map = {{1,0,0,1,0,0,0,0},
                                          {4,0,0,1,0,0,0,0},
                                          {2,0,0,1,0,0,0,0},
@@ -30,14 +30,24 @@ public:
     GameWindow* game_window;
 
 private:
+    int step = 0;
+    int lowest_step=0;
     void rotate();
     void readfile(std::vector<std::vector<int>> &map);
+
+
+
 
     static const int MAX_COL = 20;
     static const int MAX_ROW = 20;
 
     static const int PLAYER_X = 0;
     static const int PLAYER_Y = 1;
+
+    int goal_x = 19;
+    int goal_y = 19;
+    bool gameEnd = false;
+
 
 public slots:
     void move(int key);

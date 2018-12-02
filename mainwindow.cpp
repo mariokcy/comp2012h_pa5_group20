@@ -17,11 +17,12 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::game_started() {
-    if (game==nullptr) game = new GameControl();
+    game = new GameControl();
     connect(game->game_window, &GameWindow::gameWindow_closed, this, &MainWindow::game_closed);
     this->hide();
 }
 
 void MainWindow::game_closed() {
+    game->game_window->close();
     this->show();
 }
