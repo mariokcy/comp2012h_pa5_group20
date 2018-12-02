@@ -3,6 +3,7 @@
 #include "gamewindow.h"
 #include <iostream>
 #include <QDebug>
+#include <QFile>
 #include <algorithm>
 #include "record.h"
 #include "search_algorithm.h"
@@ -14,6 +15,7 @@ GameControl::GameControl() :
     player(new Player(0,0)),
     game_window(new GameWindow(this, nullptr))
 {
+    readfile(map);
     game_window->load_map();
     game_window->show();
 }
@@ -154,9 +156,9 @@ void GameControl::move(int key) {
 }
 void GameControl::rotate() {
     qDebug() << "rotate";
- std::vector<std::vector<int>> new_map;
+    std::vector<std::vector<int>> new_map;
 
- for (int oldCol = 0; oldCol< map.size(); ++oldCol) {
+    for (int oldCol = 0; oldCol< map.size(); ++oldCol) {
         std::vector<int> new_row;
 
         for (int oldRow = map.size()-1; oldRow>=0; --oldRow) {
@@ -179,7 +181,7 @@ void GameControl::rotate() {
             map[i][j]=new_map[i][j];
         }
     }
-     int r = player->getRow();
+    int r = player->getRow();
     int c = player->getCol();
     player->setRow(c);
     player->setCol(MAX_COL-1-r);
@@ -197,6 +199,37 @@ void GameControl::rotate() {
         player->setDir(UP);
         break;
     }
- game_window->load_map();
-game_window->update_map();
+    game_window->load_map();
+    game_window->update_map();
+}
+
+
+void GameControl::readfile(std::vector<std::vector<int>> &map) {
+    QFile file(QString::fromStdString(":/map.txt")) ;
+    if(!(file.open(QIODevice::ReadOnly))) {
+        qDebug() << "Cannot find map file!";
+        return;
+    }
+    QTextStream in(&file);
+    QString line = in.readLine();
+    int counter = 0;
+    map.clear();
+    while(line != QString("}") && counter <= 999) {
+        counter++;
+        if (line == "{") {
+            line = in.readLine();
+            continue;
+        };
+        line.remove("{");
+        line.remove("}");
+        std::vector<int> row_vector = {};
+        for (int i = 0; i < line.count(QRegExp("[0-9]")); ++i) {
+            QString element = line.section(QChar(','),i,i);
+            row_vector.push_back(element.toInt());
+        }
+        map.push_back(row_vector);
+        line = in.readLine();
+    }
+    if (counter>= 999) qDebug("Error: infinite loop in readfile while loop!");
+    file.close();
 }

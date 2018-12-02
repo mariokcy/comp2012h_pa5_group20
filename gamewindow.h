@@ -39,7 +39,6 @@ private:
 signals:
     void KeyPress(int key);
     void gameWindow_closed();
-
 };
 
 #endif // GAMEWINDOW_H

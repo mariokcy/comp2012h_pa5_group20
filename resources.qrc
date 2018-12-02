@@ -6,4 +6,7 @@
         <file>map_v2_a.png</file>
         <file>map_v2_t.png</file>
     </qresource>
+    <qresource prefix="/">
+        <file>map.txt</file>
+    </qresource>
 </RCC>
