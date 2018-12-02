@@ -45,6 +45,8 @@ public:
 
 private:
     void rotate();
+    void readfile(std::vector<std::vector<int>> &map);
+
     static const int MAX_COL = 20;
     static const int MAX_ROW = 20;
 

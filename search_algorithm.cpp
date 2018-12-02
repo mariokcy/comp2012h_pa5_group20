@@ -23,7 +23,7 @@ Search_algorithm::Search_algorithm(GameControl* game) :
 bool Search_algorithm::isValid(std::vector<std::vector<Block*>> *board, bool visited[MAX_ROW][MAX_COL], int row, int col)
 {
     return (row >= 0) && (row < MAX_ROW) && (col >= 0) && (col < MAX_COL)
-        && !((*board)[row][col]->getType()=='W') && !visited[row][col];
+        && !((*board)[row][col]->getType()=='w') && !visited[row][col];
 }
 
 std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>> *board, int curRow, int curCol, DIRECTION dir)
@@ -40,7 +40,7 @@ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>
         switch (dir) {
         case UP:
             if (r > 0 && (*board)[r+row[UP]][c+col[UP]]->getType() != 'w') {
-                temp.setRow(r - 1);
+                temp.setRow(r+row[UP]);
                 temp.setDir(UP);
             }
             else
@@ -50,7 +50,7 @@ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>
 
         case DOWN:
             if (r < MAX_ROW - 1 && (*board)[r+row[DOWN]][c+col[DOWN]]->getType() != 'w') {
-                temp.setRow(r + 1);
+                temp.setRow(r+row[DOWN]);
                 temp.setDir(DOWN);
             }
             else
@@ -59,7 +59,7 @@ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>
             break;
         case LEFT:
             if (c > 0 && (*board)[r+row[LEFT]][c+col[LEFT]]->getType() != 'w') {
-                temp.setCol(c - 1);
+                temp.setCol(c+col[LEFT]);
                 temp.setDir(LEFT);
             }
             else
@@ -69,7 +69,7 @@ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>
 
         case RIGHT:
             if (c < MAX_COL - 1 && (*board)[r+row[RIGHT]][c+col[RIGHT]]->getType() != 'w') {
-                temp.setCol(c + 1);
+                temp.setCol(c+col[RIGHT]);
                 temp.setDir(DIRECTION::RIGHT);
             }
             else
@@ -80,8 +80,8 @@ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>
 
         //update dir and accel
         if ((*board)[temp.getRow()][temp.getCol()]->getType() == 'a') {
-            Accel* tempAccel = dynamic_cast<Accel*> ((*board)[temp.getRow()][temp.getCol()]);
-            temp.setDir(tempAccel->getDir());
+
+            temp.setDir(dynamic_cast<Accel*> ((*board)[temp.getRow()][temp.getCol()])->getDir());
             temp.setAccel(true);
         }
         else if ((*board)[temp.getRow()][temp.getCol()]->getType() == 't') {
@@ -174,8 +174,8 @@ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>
 
             //update dir and accel
             if ((*board)[temp.getRow()][temp.getCol()]->getType() == 'a') {
-                Accel* tempAccel = dynamic_cast<Accel*> ((*board)[temp.getRow()][temp.getCol()]);
-                temp.setDir(tempAccel->getDir());
+
+                temp.setDir(dynamic_cast<Accel*> ((*board)[temp.getRow()][temp.getCol()])->getDir());
                 temp.setAccel(true);
             }
             else if ((*board)[temp.getRow()][temp.getCol()]->getType() == 't') {
@@ -230,21 +230,23 @@ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>
 //choice{originalRow, originalCol, movedRow, movedCol, terminateRow, terminateCol, distanceFromStart}
 //stp: store moved coordinate
 bool Search_algorithm::findStp(std::vector<std::vector<int>> choice,int n, int endRow, int endCol ,std::stack<std::vector<int>> &stp, std::vector<std::vector<Block*>>* board)
-{
+{   //base case reach the starting point
     if (n == 0) {
         return true;
-    }
+    }//find the previous element that can move to current point(endRow, endCol)
     for (int i = choice.size() - 1; i >= 0; i--) {
         std::vector<int> end = checkEndPoint(board, choice[i][2], choice[i][3]);
+        //push element that may be in the shortest path
         if (end[0]== endRow && end[1] == endCol) {
             stp.push(choice[i]);
+        //check the possibility of shortest path
             if (findStp(choice, n - 1, choice[i][0], choice[i][1], stp, board) ){
                 return true;
-            }
+            }//if no, pop the pervious and try other element
             else {
                 stp.pop();
             }
-        }
+        } //check the path is shortest
         if (choice[i][6] == n - 1) {
             return false;
         }
@@ -308,7 +310,7 @@ void Search_algorithm::BFS(std::vector<std::vector<Block*>> *board, int i, int j
                 visited[endPoint[0]][endPoint[1]] = true;
                 q.push({ endPoint[0], endPoint[1], dist + 1 });
 
-                choice.push_back(std::vector<int>{ i, j, i + row[k], j + col[k], endPoint[0], endPoint[1], dist + 1 });
+                choice.push_back(std::vector<int>{ i, j, i + row[k], j + col[k], endPoint[0], endPoint[1], dist + 1, k });
             }
         }
     }
@@ -321,7 +323,9 @@ void Search_algorithm::BFS(std::vector<std::vector<Block*>> *board, int i, int j
         findStp(choice, min_dist, x, y, stp, board);
         for (int i = 0; i < min_dist; i++) {
 
-            qDebug() << stp.top()[2] << ',' << stp.top()[3] << endl;
+
+            qDebug() << stp.top()[2] << ',' << stp.top()[3]<<'\t'<< stp.top()[7] << endl;
+
             stp.pop();
         }
     }
