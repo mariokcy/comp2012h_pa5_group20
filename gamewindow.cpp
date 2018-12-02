@@ -23,7 +23,7 @@ GameWindow::~GameWindow()
 }
 
 void GameWindow::keyPressEvent(QKeyEvent *event) {
-    if (event->key()==Qt::Key_W || event->key()==Qt::Key_S || event->key()==Qt::Key_D || event->key()==Qt::Key_A || event->key()==Qt::Key_R) {
+    if (event->key()==Qt::Key_W || event->key()==Qt::Key_S || event->key()==Qt::Key_D || event->key()==Qt::Key_A || event->key()==Qt::Key_R || event->key()==Qt::Key_C) {
         emit KeyPress(event->key());
     }
 }

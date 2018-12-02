@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "gamecontrol.h"
+#include "accel.h"
 
 /*
  * Assumption :
