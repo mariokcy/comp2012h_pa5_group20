@@ -3,7 +3,8 @@
 
 #include <QWidget>
 #include "gamecontrol.h"
-#include <vector>
+#include "accel.h"
+
 /*
  * Assumption :
  * The map is composed by a 15*15 block, information from the map is stored in a vector vector
@@ -25,18 +26,19 @@ public:
     explicit GameWindow(GameControl* _game, QWidget *parent = nullptr);
     void load_map();
     void update_map();
+//    void rotate();
     ~GameWindow();
 
 private:
     Ui::GameWindow *ui;
     GameControl* game;
     static const int BLOCK_SIZE = 50; // 20px*20px
-
+    void closeEvent(QCloseEvent *event);
     virtual void keyPressEvent(QKeyEvent *event) override;
     void paint_player();
-    void rotate(int dir);
 signals:
     void KeyPress(int key);
+    void gameWindow_closed();
 
 };
 

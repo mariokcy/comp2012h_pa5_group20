@@ -23,7 +23,7 @@ GameWindow::~GameWindow()
 }
 
 void GameWindow::keyPressEvent(QKeyEvent *event) {
-    if (event->key()==Qt::Key_W || event->key()==Qt::Key_S || event->key()==Qt::Key_D || event->key()==Qt::Key_A || event->key()==Qt::Key_R) {
+    if (event->key()==Qt::Key_W || event->key()==Qt::Key_S || event->key()==Qt::Key_D || event->key()==Qt::Key_A || event->key()==Qt::Key_R || event->key()==Qt::Key_C) {
         emit KeyPress(event->key());
     }
 }
@@ -97,6 +97,19 @@ void GameWindow::rotate() {
     }
 }
 */
+
+//void GameWindow::rotate() {
+//    for (int i = 0; i< game->map.size(); ++i) {
+//        for (int j = 0; j<game->map.size(); ++j) {
+//            int old_r = game->board[i][j]->getRow();
+//            int old_c = game->board[i][j]->getCol();
+//            game->board[i][j]->setRow(game->map.size()-old_c);
+//            game->board[i][j]->setCol(old_r);
+
+//        }
+//    }
+//}
+
 void GameWindow::update_map(){
     for ( int r = 0; r < game->board.size(); ++r) {
         for (int c = 0; c < (game->board[0]).size(); ++c) {

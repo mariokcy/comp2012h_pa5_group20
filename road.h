@@ -6,12 +6,14 @@
 
 class Road : public Block
 {
-private:
-    const string IMAGE_TYPE = "r";
-
 public:
     Road(int r, int c, QWidget* _parent);
     virtual char getType() const override;
+    virtual void setRow(int r) override;
+    virtual void setCol(int c) override;
+
+private:
+    const string IMAGE_TYPE = "r";
 
 };
 

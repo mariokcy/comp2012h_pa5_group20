@@ -3,9 +3,9 @@
 #include "gamewindow.h"
 #include <iostream>
 #include <QDebug>
-#include "accel.h"
 #include <algorithm>
 #include "record.h"
+#include "search_algorithm.h"
 
 using std::cout;
 using std::cin;
@@ -46,6 +46,10 @@ void GameControl::move(int key) {
         if (key == Qt::Key_R) {
             rotate();
             return;
+        }
+        if (key == Qt::Key_C) {
+            Search_algorithm temp (this);
+            temp.BFS(&board,player->getRow(),player->getCol(), 19, 19);
         }
 
     }
@@ -177,7 +181,6 @@ void GameControl::rotate() {
     }
     int r = player->getRow();
     int c = player->getCol();
-    player->setRow(MAX_COL-c);
     player->setCol(r);
     switch(player->getDir()){
     case UP:
