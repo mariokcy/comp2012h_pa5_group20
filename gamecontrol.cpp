@@ -58,7 +58,7 @@ void GameControl::move(int key) {
     switch (dir)
     {
     case UP:// map[r-1][c].PASSABLE != false
-        if (r > 0 && board[r - 1][c]->getType() != 'w') {
+        if (r > 0 && board[r+row[UP]][c+col[UP]]->getType() != 'w') {
             player->setRow(r - 1);
             player->setDir(UP);
         }
@@ -69,7 +69,7 @@ void GameControl::move(int key) {
 
     case DOWN:
         if (r < MAX_ROW - 1 &&
-                board[r + 1][c]->getType() != 'w') {
+                board[r+row[DOWN]][c+col[DOWN]]->getType() != 'w') {
             player->setRow(r + 1);
             player->setDir(DOWN);
         }
@@ -79,7 +79,7 @@ void GameControl::move(int key) {
         break;
     case LEFT:
         if (c > 0 &&
-                board[r][c - 1]->getType() != 'w') {
+                board[r+row[LEFT]][c+col[LEFT]]->getType() != 'w') {
             player->setCol(c - 1);
             player->setDir(LEFT);
         }
@@ -88,7 +88,7 @@ void GameControl::move(int key) {
         break;
 
     case RIGHT:
-        if (c < MAX_COL - 1 && board[r][c + 1]->getType() != 'w') {
+        if (c < MAX_COL - 1 && board[r+row[RIGHT]][c +col[RIGHT]]->getType() != 'w') {
             player->setCol(c + 1);
             player->setDir(RIGHT);
         }
@@ -116,7 +116,7 @@ void GameControl::move(int key) {
         {
 
         case UP:
-            if (r <= 0 || !(board[r - 1][c]->getType() != 'w')) {
+            if (r <= 0 || !(board[r+row[UP]][c+col[UP]]->getType() != 'w')) {
                 player->setAccel(false);
             } else {
                 move(key);
@@ -124,14 +124,14 @@ void GameControl::move(int key) {
             break;
 
         case DOWN:
-            if (r >= MAX_ROW - 1 || !(board[r + 1][c]->getType() != 'w')) {
+            if (r >= MAX_ROW - 1 || !(board[r+row[DOWN]][c+col[DOWN]]->getType() != 'w')) {
                 player->setAccel(false);
             } else {
                 move(key);
             }
             break;
         case LEFT:
-            if (c <= 0 || !(board[r][c - 1]->getType() != 'w')) {
+            if (c <= 0 || !(board[r+row[LEFT]][c+col[LEFT]]->getType() != 'w')) {
                 player->setAccel(false);
             } else {
                 move(key);
@@ -139,7 +139,7 @@ void GameControl::move(int key) {
             break;
 
         case RIGHT:
-            if (c >= MAX_COL - 1 || !(board[r][c + 1]->getType() != 'w')) {
+            if (c >= MAX_COL - 1 || !(board[r+row[RIGHT]][c+col[RIGHT]]->getType() != 'w')) {
                 player->setAccel(false);
             } else {
                 move(key);
@@ -152,37 +152,37 @@ void GameControl::move(int key) {
     qDebug("%d||||||%d",player->getRow(), player->getCol());
 
 }
-
 void GameControl::rotate() {
     qDebug() << "rotate";
-//    std::vector<std::vector<Block *>> new_board = {};
-//    for (int i = 0; i< MAX_ROW; ++i) {
-//        std::vector<Block *> new_row = {};
-//        for (int j = 0; j < MAX_COL; ++j) {
-//            new_row.push_back(board[j][MAX_ROW-1-i]);
-//            board[j][MAX_ROW-i-1]->setRow(i);
-//            board[j][MAX_ROW-i-1]->setCol(j);
-//        }
-//        new_board.push_back(new_row);
-//    }
-//    board = {};
-//    for (int i = 0; i < new_board.size(); ++i) {
-//        board.push_back(new_board[MAX_ROW-i-1]);
-//    }
-//    qDebug("%d %d %d %d", new_board.size(), (new_board[0]).size(), board.size(), (board[0]).size());
-    std::vector<std::vector<Block*>> new_board [MAX_ROW][MAX_COL];
-    for (int i = 0; i< MAX_ROW; ++i) {
-        for (int j = 0; j<MAX_COL; ++j) {
-            int old_r = board[i][j]->getRow();
-            int old_c = board[i][j]->getCol();
-            board[i][j]->setRow(board.size()-old_c);
-            board[i][j]->setCol(old_r);
-       }
+ std::vector<std::vector<int>> new_map;
+
+ for (int oldCol = 0; oldCol< map.size(); ++oldCol) {
+        std::vector<int> new_row;
+
+        for (int oldRow = map.size()-1; oldRow>=0; --oldRow) {
+            int update=0;
+            switch(map[oldRow][oldCol]){
+            case 3: update=6; break;
+            case 4: update=5; break;
+            case 5: update=3; break;
+            case 6: update=4; break;
+            default:update=map[oldRow][oldCol];break;
+            }
+
+            new_row.push_back(update);
+        }
+        new_map.push_back(new_row);
     }
-    int r = player->getRow();
+
+    for (int i=0; i< map.size();++i){
+        for (int j=0; j< map.size();++j){
+            map[i][j]=new_map[i][j];
+        }
+    }
+     int r = player->getRow();
     int c = player->getCol();
-    player->setRow(MAX_COL-1-c);
-    player->setCol(r);
+    player->setRow(c);
+    player->setCol(MAX_COL-1-r);
     switch(player->getDir()){
     case UP:
         player->setDir(LEFT);
@@ -197,7 +197,6 @@ void GameControl::rotate() {
         player->setDir(UP);
         break;
     }
-    qDebug() << "The player is now at"<< player->getRow()<< ", "<< player->getCol();
-    qDebug() << "Facing " << player->getDir();
-    game_window->update_map();
+ game_window->load_map();
+game_window->update_map();
 }

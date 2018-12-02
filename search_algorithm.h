@@ -22,9 +22,7 @@ private :
         int x, y, dist;
     };
 
-    // Below arrays details all 4 possible movements from a cell
-    int row[4] = { -1, 1, 0, 0 };
-    int col[4] = { 0, 0, -1, 1 };
+
 
     static const int MAX_ROW = 20;
     static const int MAX_COL = 20;
