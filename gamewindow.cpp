@@ -32,9 +32,10 @@ void GameWindow::keyPressEvent(QKeyEvent *event) {
 void GameWindow::load_map() {
     qDebug() << "hi";
     qDebug()<<"player:"<< game->player->getRow() <<','<< game->player->getCol() <<endl;
+
     while(game->board.size()){
-        game->board.pop_back();
-    }
+            game->board.pop_back();
+        }
 
     for (std::vector<std::vector<int>>::iterator row = game->map.begin(); row != game->map.end(); ++row) {
         qDebug()<<"loop";
@@ -84,31 +85,8 @@ void GameWindow::paint_player() {
     // not implemented; return when called
     return;
 }
-/*
-void GameWindow::rotate() {
-    for (int i = 0; i< game->map.size(); ++i) {
-        for (int j = 0; j<game->map.size(); ++j) {
-            int old_r = game->board[i][j]->getRow();
-            int old_c = game->board[i][j]->getCol();
-            game->board[i][j]->setRow(game->map.size()-old_c);
-            game->board[i][j]->setCol(old_r);
 
-        }
-    }
-}
-*/
 
-//void GameWindow::rotate() {
-//    for (int i = 0; i< game->map.size(); ++i) {
-//        for (int j = 0; j<game->map.size(); ++j) {
-//            int old_r = game->board[i][j]->getRow();
-//            int old_c = game->board[i][j]->getCol();
-//            game->board[i][j]->setRow(game->map.size()-old_c);
-//            game->board[i][j]->setCol(old_r);
-
-//        }
-//    }
-//}
 
 void GameWindow::update_map(){
     for ( int r = 0; r < game->board.size(); ++r) {

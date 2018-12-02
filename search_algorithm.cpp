@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include "accel.h"
+#include"direction.h"
 
 Search_algorithm::Search_algorithm(GameControl* game) :
     game(game)
@@ -38,7 +39,7 @@ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>
         int r = temp.getRow(); int c = temp.getCol();
         switch (dir) {
         case UP:
-            if (r > 0 && (*board)[r - 1][c]->getType() != 'w') {
+            if (r > 0 && (*board)[r+row[UP]][c+col[UP]]->getType() != 'w') {
                 temp.setRow(r - 1);
                 temp.setDir(UP);
             }
@@ -48,7 +49,7 @@ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>
             break;
 
         case DOWN:
-            if (r < MAX_ROW - 1 && (*board)[r + 1][c]->getType() != 'w') {
+            if (r < MAX_ROW - 1 && (*board)[r+row[DOWN]][c+col[DOWN]]->getType() != 'w') {
                 temp.setRow(r + 1);
                 temp.setDir(DOWN);
             }
@@ -57,7 +58,7 @@ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>
 
             break;
         case LEFT:
-            if (c > 0 && (*board)[r][c - 1]->getType() != 'w') {
+            if (c > 0 && (*board)[r+row[LEFT]][c+col[LEFT]]->getType() != 'w') {
                 temp.setCol(c - 1);
                 temp.setDir(LEFT);
             }
@@ -67,7 +68,7 @@ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>
             break;
 
         case RIGHT:
-            if (c < MAX_COL - 1 && (*board)[r][c + 1]->getType() != 'w') {
+            if (c < MAX_COL - 1 && (*board)[r+row[RIGHT]][c+col[RIGHT]]->getType() != 'w') {
                 temp.setCol(c + 1);
                 temp.setDir(DIRECTION::RIGHT);
             }
@@ -91,23 +92,23 @@ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>
         r = temp.getRow(); c = temp.getCol();
         switch (temp.getDir()) {
         case UP:
-            if (r <= 0 || (*board)[r - 1][c]->getType() == 'w') {
+            if (r <= 0 || (*board)[r+row[UP]][c+col[UP]]->getType() == 'w') {
                 temp.setAccel(false);
             }
             break;
 
         case DOWN:
-            if (r >= MAX_ROW - 1 || (*board)[r + 1][c]->getType() == 'w') {
+            if (r >= MAX_ROW - 1 || (*board)[r+row[DOWN]][c+col[DOWN]]->getType() == 'w') {
                 temp.setAccel(false);
             }
             break;
         case LEFT:
-            if (c <= 0 || (*board)[r][c - 1]->getType() == 'w') {
+            if (c <= 0 || (*board)[r+row[LEFT]][c+col[LEFT]]->getType() == 'w') {
                 temp.setAccel(false);
             }
             break;
         case RIGHT:
-            if (c >= MAX_COL - 1 || (*board)[r][c + 1]->getType() == 'w') {
+            if (c >= MAX_COL - 1 || (*board)[r+row[RIGHT]][c+col[RIGHT]]->getType() == 'w') {
                 temp.setAccel(false);
             }
             break;
@@ -133,8 +134,8 @@ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>
             switch (temp.getDir())
             {
             case UP:
-                if (r > 0 && (*board)[r - 1][c]->getType() != 'w') {
-                    temp.setRow(r - 1);
+                if (r > 0 && (*board)[r+row[UP]][c+col[UP]]->getType() != 'w') {
+                    temp.setRow(r+row[UP]);
                     temp.setDir(UP);
                 }
                 else
@@ -142,8 +143,8 @@ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>
                 break;
 
             case DOWN:
-                if (r < MAX_ROW - 1 && (*board)[r + 1][c]->getType() != 'w') {
-                    temp.setRow(r + 1);
+                if (r < MAX_ROW - 1 && (*board)[r+row[DOWN]][c+col[DOWN]]->getType() != 'w') {
+                    temp.setRow(r+row[DOWN]);
                     temp.setDir(DOWN);
                 }
                 else
@@ -151,8 +152,8 @@ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>
 
                 break;
             case LEFT:
-                if (c > 0 && (*board)[r][c - 1]->getType() != 'w') {
-                    temp.setCol(c - 1);
+                if (c > 0 && (*board)[r+row[LEFT]][c+col[LEFT]]->getType() != 'w') {
+                    temp.setCol(r+row[LEFT]);
                     temp.setDir(LEFT);
                 }
                 else
@@ -161,8 +162,8 @@ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>
                 break;
 
             case RIGHT:
-                if (c < MAX_COL - 1 && (*board)[r][c + 1]->getType() != 'w') {
-                    temp.setCol(c + 1);
+                if (c < MAX_COL - 1 && (*board)[r+row[RIGHT]][c+col[RIGHT]]->getType() != 'w') {
+                    temp.setCol(r+row[RIGHT]);
                     temp.setDir(DIRECTION::RIGHT);
                 }
                 else
@@ -187,24 +188,24 @@ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>
             {
 
             case UP:
-                if (r <= 0 || (*board)[r - 1][c]->getType() == 'w') {
+                if (r <= 0 || (*board)[r+row[UP]][c+col[UP]]->getType() == 'w') {
                     temp.setAccel(false);
                 }
                 break;
 
             case DOWN:
-                if (r >= MAX_ROW - 1 || (*board)[r + 1][c]->getType() == 'w') {
+                if (r >= MAX_ROW - 1 || (*board)[r+row[DOWN]][c+col[DOWN]]->getType() == 'w') {
                     temp.setAccel(false);
                 }
                 break;
             case LEFT:
-                if (c <= 0 || (*board)[r][c - 1]->getType() == 'w') {
+                if (c <= 0 || (*board)[r+row[LEFT]][c+col[LEFT]]->getType() == 'w') {
                     temp.setAccel(false);
                 }
                 break;
 
             case RIGHT:
-                if (c >= MAX_COL - 1 || (*board)[r][c + 1]->getType() == 'w') {
+                if (c >= MAX_COL - 1 || (*board)[r+row[RIGHT]][c+col[RIGHT]]->getType() == 'w') {
                     temp.setAccel(false);
                 }
                 break;
@@ -312,18 +313,21 @@ void Search_algorithm::BFS(std::vector<std::vector<Block*>> *board, int i, int j
         }
     }
 
-    if (min_dist != INT_MAX)
+    if (min_dist != INT_MAX){
         qDebug() << "The shortest path from source to destination "
                     "has length " << min_dist << endl;
-    else
-        qDebug() << "Destination can't be reached from given source" << endl;
 
-    std::stack<std::vector<int>> stp;
-    bool a = findStp(choice, min_dist, x, y, stp, board);
-    for (int i = 0; i < min_dist; i++) {
+        std::stack<std::vector<int>> stp;
+        findStp(choice, min_dist, x, y, stp, board);
+        for (int i = 0; i < min_dist; i++) {
 
-        qDebug() << stp.top()[2] << ',' << stp.top()[3] << endl;
-        stp.pop();
+            qDebug() << stp.top()[2] << ',' << stp.top()[3] << endl;
+            stp.pop();
+        }
     }
+    else{
+        qDebug() << "Destination can't be reached from given source" << endl;
+    }
+
 
 }
