@@ -1,7 +1,12 @@
+
 #include "gamecontrol.h"
 #include "gamewindow.h"
 #include <iostream>
 #include <QDebug>
+#include "accel.h"
+#include <algorithm>
+#include "record.h"
+
 using std::cout;
 using std::cin;
 
@@ -14,19 +19,33 @@ GameControl::GameControl() :
 }
 
 GameControl::~GameControl() {
-
+    delete player;
+    player = nullptr;
+    for (int i = 0; i < board.size(); ++i) {
+        for( int j = 0; j < board.size(); ++j) {
+            delete board[i][j];
+            board[i][j] = nullptr;
+        }
+    }
+    delete game_window;
+    game_window = nullptr;
 }
 
 void GameControl::move(int key) {
-    Accel::DIRECTION dir = Accel::UP; // Default : UP
+
+    DIRECTION dir = UP; // Default : UP
     if (player->isAccel()) {
         dir = player->getDir();
     } else {
         std::vector<Qt::Key> key_list = {Qt::Key_W, Qt::Key_S, Qt::Key_A, Qt::Key_D};
         for (std::vector<Qt::Key>::iterator i = key_list.begin(); i != key_list.end(); ++i) {
             if (key == *i) {
-                dir = static_cast<Accel::DIRECTION>(i-key_list.begin());
+                dir = static_cast<DIRECTION>(i-key_list.begin());
             }
+        }
+        if (key == Qt::Key_R) {
+            rotate();
+            return;
         }
 
     }
@@ -34,40 +53,40 @@ void GameControl::move(int key) {
     int r = player->getRow(); int c = player->getCol();
     switch (dir)
     {
-    case Accel::UP:// map[r-1][c].PASSABLE != false
+    case UP:// map[r-1][c].PASSABLE != false
         if (r > 0 && board[r - 1][c]->getType() != 'w') {
             player->setRow(r - 1);
-            player->setDir(Accel::UP);
+            player->setDir(UP);
         }
         else
             player->setAccel(false);
 
         break;
 
-    case Accel::DOWN:
+    case DOWN:
         if (r < MAX_ROW - 1 &&
                 board[r + 1][c]->getType() != 'w') {
             player->setRow(r + 1);
-            player->setDir(Accel::DOWN);
+            player->setDir(DOWN);
         }
         else
             player->setAccel(false);
 
         break;
-    case Accel::LEFT:
+    case LEFT:
         if (c > 0 &&
                 board[r][c - 1]->getType() != 'w') {
             player->setCol(c - 1);
-            player->setDir(Accel::LEFT);
+            player->setDir(LEFT);
         }
         else
             player->setAccel(false);
         break;
 
-    case Accel::RIGHT:
+    case RIGHT:
         if (c < MAX_COL - 1 && board[r][c + 1]->getType() != 'w') {
             player->setCol(c + 1);
-            player->setDir(Accel::RIGHT);
+            player->setDir(RIGHT);
         }
         else
             player->setAccel(false);
@@ -92,7 +111,7 @@ void GameControl::move(int key) {
         switch (player->getDir())
         {
 
-        case Accel::UP:
+        case UP:
             if (r <= 0 || !(board[r - 1][c]->getType() != 'w')) {
                 player->setAccel(false);
             } else {
@@ -100,14 +119,14 @@ void GameControl::move(int key) {
             }
             break;
 
-        case Accel::DOWN:
+        case DOWN:
             if (r >= MAX_ROW - 1 || !(board[r + 1][c]->getType() != 'w')) {
                 player->setAccel(false);
             } else {
                 move(key);
             }
             break;
-        case Accel::LEFT:
+        case LEFT:
             if (c <= 0 || !(board[r][c - 1]->getType() != 'w')) {
                 player->setAccel(false);
             } else {
@@ -115,7 +134,7 @@ void GameControl::move(int key) {
             }
             break;
 
-        case Accel::RIGHT:
+        case RIGHT:
             if (c >= MAX_COL - 1 || !(board[r][c + 1]->getType() != 'w')) {
                 player->setAccel(false);
             } else {
@@ -128,4 +147,104 @@ void GameControl::move(int key) {
     game_window->update_map();
     qDebug("%d||||||%d",player->getRow(), player->getCol());
 
+}
+/*
+void GameControl::rotate() {
+    qDebug() << "rotate";
+//    std::vector<std::vector<Block *>> new_board = {};
+//    for (int i = 0; i< MAX_ROW; ++i) {
+//        std::vector<Block *> new_row = {};
+//        for (int j = 0; j < MAX_COL; ++j) {
+//            new_row.push_back(board[j][MAX_ROW-1-i]);
+//            board[j][MAX_ROW-i-1]->setRow(i);
+//            board[j][MAX_ROW-i-1]->setCol(j);
+//        }
+//        new_board.push_back(new_row);
+//    }
+//    board = {};
+//    for (int i = 0; i < new_board.size(); ++i) {
+//        board.push_back(new_board[MAX_ROW-i-1]);
+//    }
+//    qDebug("%d %d %d %d", new_board.size(), (new_board[0]).size(), board.size(), (board[0]).size());
+    std::vector<std::vector<Block*>> new_board [MAX_ROW][MAX_COL];
+    for (int i = 0; i< MAX_ROW; ++i) {
+        for (int j = 0; j<MAX_COL; ++j) {
+            int old_r = board[i][j]->getRow();
+            int old_c = board[i][j]->getCol();
+            board[i][j]->setRow(board.size()-old_c);
+            board[i][j]->setCol(old_r);
+       }
+    }
+    int r = player->getRow();
+    int c = player->getCol();
+    player->setRow(MAX_COL-c);
+    player->setCol(r);
+    switch(player->getDir()){
+    case UP:
+        player->setDir(LEFT);
+        break;
+    case LEFT:
+        player->setDir(DOWN);
+        break;
+    case DOWN:
+        player->setDir(RIGHT);
+        break;
+    case RIGHT:
+        player->setDir(UP);
+        break;
+    }
+    qDebug() << "The player is now at"<< player->getRow()<< ", "<< player->getCol();
+    qDebug() << "Facing " << player->getDir();
+    game_window->update_map();
+}
+*/
+void GameControl::rotate() {
+    qDebug() << "rotate";
+
+std::vector<std::vector<int>> new_map;
+    for (int col = 0, i=0; col< map.size(); ++col, ++i) {
+        std::vector<int> new_row;
+        for (int row = map.size()-1, j=0; row>=0; --row, ++j) {
+            int update=0;
+            switch(map[row][col]){
+            case 3: update=6; break;
+            case 4: update=5; break;
+            case 5: update=3; break;
+            case 6: update=4; break;
+            default:update=map[row][col];break;
+            }
+
+
+            new_row.push_back(update);
+        }
+        new_map.push_back(new_row);
+    }
+    for (int i=0; i< map.size();++i){
+        for (int j=0; j< map.size();++j){
+            map[i][j]=new_map[i][j];
+        }
+    }
+
+    int r = player->getRow();
+    int c = player->getCol();
+    player->setRow(c);
+    player->setCol(MAX_COL-1-r);
+    switch(player->getDir()){
+    case UP:
+        player->setDir(LEFT);
+        break;
+    case LEFT:
+        player->setDir(DOWN);
+        break;
+    case DOWN:
+        player->setDir(RIGHT);
+        break;
+    case RIGHT:
+        player->setDir(UP);
+        break;
+    }
+
+
+game_window->load_map();
+game_window->update_map();
 }
