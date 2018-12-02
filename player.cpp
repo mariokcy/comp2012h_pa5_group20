@@ -17,7 +17,7 @@ int Player::getCol()const {
 DIRECTION Player::getDir()const {
     return dir;
 }
-bool Player::isAccel() {
+bool Player::isAccel()const {
     return Accel;
 }
 //setter

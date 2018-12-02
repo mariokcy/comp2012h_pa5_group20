@@ -9,9 +9,7 @@ class GameControl;
 
 class Search_algorithm
 {
-public:
-    Search_algorithm(GameControl* game);
-    void BFS(std::vector<std::vector<Block*>> *board, int i, int j, int x, int y);
+
 
 private :
     // queue node used in BFS
@@ -29,10 +27,15 @@ private :
 
     GameControl* game;
 
+public:
+    Search_algorithm(GameControl* game);
+    void BFS(std::vector<std::vector<Block*>> *board, int i, int j, int x, int y);
+
     bool isValid(std::vector<std::vector<Block*>> *board, bool visited[MAX_ROW][MAX_COL], int row, int col);
-    std::vector<int> checkEndPoint(std::vector<std::vector<Block*>> *board, int curRow, int curCol);
-    std::vector<int> checkEndPoint(std::vector<std::vector<Block*>> *board, int curRow, int curCol, DIRECTION dir);
+    static std::vector<int> checkEndPoint(std::vector<std::vector<Block*>> *board, int curRow, int curCol);
+    static std::vector<int> checkEndPoint(std::vector<std::vector<Block*>> *board, int curRow, int curCol, DIRECTION dir);
     bool findStp(std::vector<std::vector<int>> choice,int n, int endRow, int endCol ,std::stack<std::vector<int>> &stp, std::vector<std::vector<Block*>> *board);
+
 };
 
 #endif // SEARCH_ALGORITHM_H

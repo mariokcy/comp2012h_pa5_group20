@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "block.h"
 
+// Not allow passage
 class Wall : public Block
 {
 public:

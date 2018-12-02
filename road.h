@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "block.h"
 
+// Normal road block, allow passage, no special feature
 class Road : public Block
 {
 public:

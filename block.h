@@ -8,7 +8,8 @@
 using std::string;
 
 class GameControl;
-// Normal road block, allow passage, no special feature
+// Base class of different block type
+// is Abstract Base Class
 class Block : public QPushButton
 {
     Q_OBJECT

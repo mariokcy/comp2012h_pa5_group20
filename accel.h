@@ -4,7 +4,8 @@
 #include <QWidget>
 #include "block.h"
 
-
+// Passable but player will keep walk
+// until the player face Wall/ out of boundary/ on Terminate block
 class Accel : public Block
 {
 public:

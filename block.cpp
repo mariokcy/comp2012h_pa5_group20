@@ -48,10 +48,3 @@ int Block::getCol() const {
     return col;
 }
 
-//void Block::setCol(int c) {
-//    col = c;
-//}
-
-//void Block::setRow(int r) {
-//    row = r;
-//}
