@@ -3,8 +3,11 @@
         <file>map_v2_r.png</file>
         <file>map_v2_w.png</file>
         <file>player.png</file>
-        <file>map_v2_a.png</file>
         <file>map_v2_t.png</file>
+        <file>map_v2_a_0.png</file>
+        <file>map_v2_a_1.png</file>
+        <file>map_v2_a_2.png</file>
+        <file>map_v2_a_3.png</file>
     </qresource>
     <qresource prefix="/">
         <file>map.txt</file>

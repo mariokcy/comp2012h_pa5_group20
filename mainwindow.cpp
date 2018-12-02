@@ -17,7 +17,7 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::game_started() {
-    GameControl* game = new GameControl();
+    if (game==nullptr) game = new GameControl();
     connect(game->game_window, &GameWindow::gameWindow_closed, this, &MainWindow::game_closed);
     this->hide();
 }

@@ -23,7 +23,7 @@ void Accel::set_image(Player player) {
     else {
         string str = "";
         str.push_back(getType());
-        setStyleSheet(QString::fromStdString("border-image: url(\":/resources/map_v2_" + str + ".png\");"));
+        setStyleSheet(QString::fromStdString("border-image: url(\":/resources/map_v2_" + str + "_" + std::to_string(dir) + ".png\");"));
     }
 }
 void Accel::setRow(int r) {

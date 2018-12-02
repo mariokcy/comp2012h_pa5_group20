@@ -15,8 +15,6 @@ Search_algorithm::Search_algorithm(GameControl* game) :
 {    
 }
 
-
-
 // Function to check if it is possible to go to position (row, col)
 // from current position. The function returns false if (row, col)
 // is not a valid position or has value 0 or it is already visited
@@ -27,9 +25,8 @@ bool Search_algorithm::isValid(std::vector<std::vector<Block*>> *board, bool vis
 }
 
 // Function to return the destination coordinate when (originalRow,originalCol) move dir
- std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>> *board, int originalRow, int originalCol, DIRECTION dir)
-{
-    Player temp{ originalRow,originalCol,dir };
+ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>> *board, int originalRow, int originalCol, DIRECTION dir){
+     Player temp{ originalRow,originalCol,dir };
     do {
 
         if (temp.isAccel()) {
@@ -123,8 +120,7 @@ bool Search_algorithm::isValid(std::vector<std::vector<Block*>> *board, bool vis
     return end;
 };
 
-// Function to return the destination coordinate when player move to (movedRow,movedCol)
- std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>> *board, int movedRow, int movedCol)
+std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>> *board, int curRow, int curCol)
 {
     if ((*board)[movedRow][movedCol]->getType() == 'a') {
         Accel* tempAccel = dynamic_cast<Accel*> ((*board)[movedRow][movedCol]);
@@ -223,17 +219,14 @@ bool Search_algorithm::isValid(std::vector<std::vector<Block*>> *board, bool vis
     } else {
         std::vector<int> end;
         end.push_back(movedRow);
-        end.push_back(movedCol);
+             end.push_back(movedCol);
         return end;
     }
 }
 
 
-// choice{originalRow, originalCol, movedRow, movedCol, terminateRow, terminateCol, distanceFromStart, movedDirection }
-// stp: store moved coordinate
-// recusively find the element in choice can just move 1 step to reach (endRow, endCol), and push in stp
-// until distanceFromStart is 0
-// Note: there must be a list of element fulfill the stp as it call after BFS return the shortest distance, i.e. solution exists
+//choice{originalRow, originalCol, movedRow, movedCol, terminateRow, terminateCol, distanceFromStart}
+//stp: store moved coordinate
 bool Search_algorithm::findStp(std::vector<std::vector<int>> choice,int n, int endRow, int endCol ,std::stack<std::vector<int>> &stp, std::vector<std::vector<Block*>>* board)
 {   //base case reach the starting point
     if (n == 0) {
@@ -328,7 +321,6 @@ void Search_algorithm::BFS(std::vector<std::vector<Block*>> *board, int i, int j
         findStp(choice, min_dist, x, y, stp, board);
         for (int i = 0; i < min_dist; i++) {
             qDebug() << stp.top()[2] << ',' << stp.top()[3]<<'\t'<< stp.top()[7] << endl;
-
             stp.pop();
         }
     }

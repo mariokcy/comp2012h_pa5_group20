@@ -47,4 +47,3 @@ bool Block::player_isHere(Player player) {
 int Block::getCol() const {
     return col;
 }
-

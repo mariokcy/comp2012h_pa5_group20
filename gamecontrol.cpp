@@ -3,16 +3,16 @@
 #include "gamewindow.h"
 #include <iostream>
 #include <QDebug>
-#include <QFile>
+#include "accel.h"
 #include <algorithm>
 #include "record.h"
-#include "search_algorithm.h"
+#include <QFile>
 
 using std::cout;
 using std::cin;
 
 GameControl::GameControl() :
-    player(new Player(0,0)),
+    player(new Player(PLAYER_X,PLAYER_Y)),
     game_window(new GameWindow(this, nullptr))
 {
     readfile(map);
@@ -34,7 +34,7 @@ GameControl::~GameControl() {
 }
 
 void GameControl::move(int key) {
-
+    
     DIRECTION dir = UP; // Default : UP
     if (player->isAccel()) {
         dir = player->getDir();
@@ -49,21 +49,16 @@ void GameControl::move(int key) {
             rotate();
             return;
         }
-        if (key == Qt::Key_C) {
-            Search_algorithm temp (this);
-            temp.BFS(&board,player->getRow(),player->getCol(), 19, 19);
-        }
 
     }
     // Walk to the desire position
-      std::vector<int> temp = Search_algorithm::checkEndPoint(&board,player->getRow(),player->getCol(),dir);
-
-      /*
+    std::vector<int> temp = Search_algorithm::checkEndPoint(&board,player->getRow(),player->getCol(),dir);
+    /*
     switch (dir)
     {
-    case UP:
-        if (r > 0 && board[r+row[UP]][c+col[UP]]->getType() != 'w') {
-            player->setRow(r+row[UP]);
+    case UP:// map[r-1][c].PASSABLE != false
+        if (r > 0 && board[r - 1][c]->getType() != 'w') {
+            player->setRow(r - 1);
             player->setDir(UP);
         }
         else
@@ -73,8 +68,8 @@ void GameControl::move(int key) {
 
     case DOWN:
         if (r < MAX_ROW - 1 &&
-                board[r+row[DOWN]][c+col[DOWN]]->getType() != 'w') {
-            player->setRow(r+row[DOWN]);
+                board[r + 1][c]->getType() != 'w') {
+            player->setRow(r + 1);
             player->setDir(DOWN);
         }
         else
@@ -83,8 +78,8 @@ void GameControl::move(int key) {
         break;
     case LEFT:
         if (c > 0 &&
-                board[r+row[LEFT]][c+col[LEFT]]->getType() != 'w') {
-            player->setCol(c+col[LEFT]);
+                board[r][c - 1]->getType() != 'w') {
+            player->setCol(c - 1);
             player->setDir(LEFT);
         }
         else
@@ -92,8 +87,8 @@ void GameControl::move(int key) {
         break;
 
     case RIGHT:
-        if (c < MAX_COL - 1 && board[r+row[RIGHT]][c +col[RIGHT]]->getType() != 'w') {
-            player->setCol(c+col[RIGHT]);
+        if (c < MAX_COL - 1 && board[r][c + 1]->getType() != 'w') {
+            player->setCol(c + 1);
             player->setDir(RIGHT);
         }
         else
@@ -107,8 +102,8 @@ void GameControl::move(int key) {
     // Position of the player is changed according to their key pressed
     //update dir and accel
     if (board[r][c]->getType() == 'a') {
-
-        player->setDir(dynamic_cast<Accel*> (board[r][c])->getDir());
+        Accel* temp = dynamic_cast<Accel*> (board[r][c]);
+        player->setDir(temp->getDir());
         player->setAccel(true);
     } else if (board[r][c]->getType() == 't') {
         player->setAccel(false);
@@ -120,7 +115,7 @@ void GameControl::move(int key) {
         {
 
         case UP:
-            if (r <= 0 || !(board[r+row[UP]][c+col[UP]]->getType() != 'w')) {
+            if (r <= 0 || !(board[r - 1][c]->getType() != 'w')) {
                 player->setAccel(false);
             } else {
                 move(key);
@@ -128,14 +123,14 @@ void GameControl::move(int key) {
             break;
 
         case DOWN:
-            if (r >= MAX_ROW - 1 || !(board[r+row[DOWN]][c+col[DOWN]]->getType() != 'w')) {
+            if (r >= MAX_ROW - 1 || !(board[r + 1][c]->getType() != 'w')) {
                 player->setAccel(false);
             } else {
                 move(key);
             }
             break;
         case LEFT:
-            if (c <= 0 || !(board[r+row[LEFT]][c+col[LEFT]]->getType() != 'w')) {
+            if (c <= 0 || !(board[r][c - 1]->getType() != 'w')) {
                 player->setAccel(false);
             } else {
                 move(key);
@@ -143,7 +138,7 @@ void GameControl::move(int key) {
             break;
 
         case RIGHT:
-            if (c >= MAX_COL - 1 || !(board[r+row[RIGHT]][c+col[RIGHT]]->getType() != 'w')) {
+            if (c >= MAX_COL - 1 || !(board[r][c + 1]->getType() != 'w')) {
                 player->setAccel(false);
             } else {
                 move(key);
@@ -151,14 +146,17 @@ void GameControl::move(int key) {
             break;
         }
 
-    }*/
+    }
+    game_window->update_map();
+    qDebug("%d||||||%d",player->getRow(), player->getCol());
+
+}*/
     player->setRow(temp[0]);
     player->setCol(temp[1]);
     game_window->update_map();
     qDebug("%d||||||%d",player->getRow(), player->getCol());
 
 }
-
 
 //update map by rotate 90 degree and also change all related to direction such as accelerater, player
 void GameControl::rotate() {
@@ -214,7 +212,6 @@ void GameControl::rotate() {
     game_window->update_map();
 }
 
-
 void GameControl::readfile(std::vector<std::vector<int>> &map) {
     QFile file(QString::fromStdString(":/map.txt")) ;
     if(!(file.open(QIODevice::ReadOnly))) {
@@ -244,3 +241,4 @@ void GameControl::readfile(std::vector<std::vector<int>> &map) {
     if (counter>= 999) qDebug("Error: infinite loop in readfile while loop!");
     file.close();
 }
+

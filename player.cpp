@@ -17,7 +17,7 @@ int Player::getCol()const {
 DIRECTION Player::getDir()const {
     return dir;
 }
-bool Player::isAccel()const {
+bool Player::isAccel() {
     return Accel;
 }
 //setter
@@ -34,5 +34,5 @@ void Player::setCol(int c) {
     col = c;
 }
 bool Player::isEnd() {
-    return (col == 3 && row == 0);
+    return (col == GOAL_X && row == GOAL_Y);
 }
