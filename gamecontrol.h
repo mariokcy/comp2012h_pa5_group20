@@ -39,11 +39,14 @@ public:
         {1,1,0,1,1,2,1,1,1,1,1,1,1,5,1,1,1,1,1,1},
         {1,2,1,1,1,1,1,1,1,1,1,1,1,5,1,1,1,1,1,1}
         };
+
+    // container for blocks in map
     std::vector<std::vector<Block*>> board = {};
     Player* player;
     GameWindow* game_window;
 
 private:
+    // rotate map, player, block at 90 degree
     void rotate();
     void readfile(std::vector<std::vector<int>> &map);
 

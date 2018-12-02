@@ -4,6 +4,8 @@
 #include <QWidget>
 #include "block.h"
 
+// allow passage
+// if player is accelerating, stop player
 class Terminate : public Block
 {
 public:

@@ -56,10 +56,12 @@ void GameControl::move(int key) {
 
     }
     // Walk to the desire position
-    int r = player->getRow(); int c = player->getCol();
+      std::vector<int> temp = Search_algorithm::checkEndPoint(&board,player->getRow(),player->getCol(),dir);
+
+      /*
     switch (dir)
     {
-    case UP:// map[r-1][c].PASSABLE != false
+    case UP:
         if (r > 0 && board[r+row[UP]][c+col[UP]]->getType() != 'w') {
             player->setRow(r+row[UP]);
             player->setDir(UP);
@@ -149,21 +151,28 @@ void GameControl::move(int key) {
             break;
         }
 
-    }
+    }*/
+    player->setRow(temp[0]);
+    player->setCol(temp[1]);
     game_window->update_map();
     qDebug("%d||||||%d",player->getRow(), player->getCol());
 
 }
+
+
+//update map by rotate 90 degree and also change all related to direction such as accelerater, player
 void GameControl::rotate() {
     qDebug() << "rotate";
     std::vector<std::vector<int>> new_map;
 
+    //rotate the map and store in new_map
     for (int oldCol = 0; oldCol< map.size(); ++oldCol) {
         std::vector<int> new_row;
 
         for (int oldRow = map.size()-1; oldRow>=0; --oldRow) {
             int update=0;
             switch(map[oldRow][oldCol]){
+            //rotate accelerater
             case UP+3: update=RIGHT+3; break;
             case DOWN+3: update=LEFT+3; break;
             case LEFT+3: update=UP+3; break;
@@ -175,12 +184,13 @@ void GameControl::rotate() {
         }
         new_map.push_back(new_row);
     }
-
+    //deep copy the new_map to original map
     for (int i=0; i< map.size();++i){
         for (int j=0; j< map.size();++j){
             map[i][j]=new_map[i][j];
         }
     }
+    //rotate player
     int r = player->getRow();
     int c = player->getCol();
     player->setRow(c);
@@ -199,6 +209,7 @@ void GameControl::rotate() {
         player->setDir(UP);
         break;
     }
+    //reload and update the map
     game_window->load_map();
     game_window->update_map();
 }

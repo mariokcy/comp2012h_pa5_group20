@@ -26,9 +26,10 @@ bool Search_algorithm::isValid(std::vector<std::vector<Block*>> *board, bool vis
         && !((*board)[row][col]->getType()=='w') && !visited[row][col];
 }
 
-std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>> *board, int curRow, int curCol, DIRECTION dir)
+// Function to return the destination coordinate when (originalRow,originalCol) move dir
+ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>> *board, int originalRow, int originalCol, DIRECTION dir)
 {
-    Player temp{ curRow,curCol,dir };
+    Player temp{ originalRow,originalCol,dir };
     do {
 
         if (temp.isAccel()) {
@@ -122,11 +123,12 @@ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>
     return end;
 };
 
-std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>> *board, int curRow, int curCol)
+// Function to return the destination coordinate when player move to (movedRow,movedCol)
+ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>> *board, int movedRow, int movedCol)
 {
-    if ((*board)[curRow][curCol]->getType() == 'a') {
-        Accel* tempAccel = dynamic_cast<Accel*> ((*board)[curRow][curCol]);
-        Player temp{ curRow,curCol,tempAccel->getDir() };
+    if ((*board)[movedRow][movedCol]->getType() == 'a') {
+        Accel* tempAccel = dynamic_cast<Accel*> ((*board)[movedRow][movedCol]);
+        Player temp{ movedRow,movedCol,tempAccel->getDir() };
         temp.setAccel(true);
 
         do {
@@ -220,15 +222,18 @@ std::vector<int> Search_algorithm::checkEndPoint(std::vector<std::vector<Block*>
         return end;
     } else {
         std::vector<int> end;
-        end.push_back(curRow);
-        end.push_back(curCol);
+        end.push_back(movedRow);
+        end.push_back(movedCol);
         return end;
     }
 }
 
 
-//choice{originalRow, originalCol, movedRow, movedCol, terminateRow, terminateCol, distanceFromStart}
-//stp: store moved coordinate
+// choice{originalRow, originalCol, movedRow, movedCol, terminateRow, terminateCol, distanceFromStart, movedDirection }
+// stp: store moved coordinate
+// recusively find the element in choice can just move 1 step to reach (endRow, endCol), and push in stp
+// until distanceFromStart is 0
+// Note: there must be a list of element fulfill the stp as it call after BFS return the shortest distance, i.e. solution exists
 bool Search_algorithm::findStp(std::vector<std::vector<int>> choice,int n, int endRow, int endCol ,std::stack<std::vector<int>> &stp, std::vector<std::vector<Block*>>* board)
 {   //base case reach the starting point
     if (n == 0) {
@@ -254,11 +259,11 @@ bool Search_algorithm::findStp(std::vector<std::vector<int>> choice,int n, int e
     return false;
 }
 
-// Find Shortest Possible Route in a matrix mat from source
+// Find Shortest Possible Route in a 2d vector board from source
 // cell (i, j) to destination cell (x, y)
 void Search_algorithm::BFS(std::vector<std::vector<Block*>> *board, int i, int j, int x, int y)
 {
-    //store the possible route for find stp
+    //store the possible route for findStp
     std::vector<std::vector<int>> choice;
     choice.push_back(std::vector<int>{ i, j, i, j, i, j, 0 });
 
@@ -287,7 +292,6 @@ void Search_algorithm::BFS(std::vector<std::vector<Block*>> *board, int i, int j
         // (i, j) represents current cell and dist stores its
         // minimum distance from the source
         int i = node.x, j = node.y, dist = node.dist;
-        //a.push_back(vector<int>{i, j });
 
         // if destination is found, update min_dist and stop
         if (i == x && j == y)
@@ -305,11 +309,12 @@ void Search_algorithm::BFS(std::vector<std::vector<Block*>> *board, int i, int j
             std::vector<int> endPoint = checkEndPoint(board, i, j, (DIRECTION)k);
             if (isValid(board, visited, i + row[k], j + col[k]) && isValid(board, visited, endPoint[0], endPoint[1]))
             {
-                // mark next cell as visited and enqueue it
+                // mark moved and terminate cell as visited and enqueue it
                 visited[i + row[k]][j + col[k]] = true;
                 visited[endPoint[0]][endPoint[1]] = true;
                 q.push({ endPoint[0], endPoint[1], dist + 1 });
 
+                //store the possible element in the shortest path
                 choice.push_back(std::vector<int>{ i, j, i + row[k], j + col[k], endPoint[0], endPoint[1], dist + 1, k });
             }
         }
@@ -322,8 +327,6 @@ void Search_algorithm::BFS(std::vector<std::vector<Block*>> *board, int i, int j
         std::stack<std::vector<int>> stp;
         findStp(choice, min_dist, x, y, stp, board);
         for (int i = 0; i < min_dist; i++) {
-
-
             qDebug() << stp.top()[2] << ',' << stp.top()[3]<<'\t'<< stp.top()[7] << endl;
 
             stp.pop();
